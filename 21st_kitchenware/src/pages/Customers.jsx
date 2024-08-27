@@ -115,8 +115,8 @@ export default function Customers() {
 
   const classNames = React.useMemo(
     () => ({
-      base: ["max-h-[382px]", "max-w-3xl"],
-      wrapper: ["max-h-[382px]", "max-w-3xl"],
+      base: [ "max-w-3xl"],
+      wrapper: ["max-w-3xl"],
     }),
     []
   );
@@ -192,7 +192,7 @@ export default function Customers() {
         </Table>
       </div>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal  backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (
             <>

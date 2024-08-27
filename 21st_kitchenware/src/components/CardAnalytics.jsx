@@ -8,7 +8,7 @@ export default function CardAnalytics({
 }) {
   return (
     <>
-      <div className="flex gap-4 px-2 py-4">
+      <div className="flex flex-col md:flex-row gap-4 px-2 py-4">
         <Card className="min-w-[200px]">
           <CardBody>
             <p>Approved Orders</p>

@@ -21,21 +21,7 @@ export default function Dashboard() {
     const debounceSearchId = useDebounce(orderSearch, 500);
     const [endDate,setEndDate] = useState(new Date());
     const [startDate,setStartDate] = useState(startOfMonth(new Date()));
-    
-    // useEffect(() => {
-    //     const unsubscribe = onSnapshot(collection(db, "order_table"), (snapshot) => {
-    //       const ordersData = snapshot.docs.map((doc) => ({
-    //         id: doc.id,
-    //         ...doc.data(),
-    //       }));
-    //       setOrders(ordersData);
-    //       setLoading(false);
-    //     });
-    //     console.log(orders);
-        
-    //     // Cleanup subscription on unmount
-    //     return () => unsubscribe();
-    //   }, []);
+
       useEffect(() => {
         let q = null;
         console.log(startDate + " " + endDate);
@@ -83,7 +69,7 @@ export default function Dashboard() {
   return (
     <div>
       <CardAnalytics approved={approved} billed={billed} cancelled={cancelled}/>
-      <div className="flex justify-between px-4 py-4">
+      <div className="flex justify-between px-4 py-4 gap-2">
         <Input
           label="Search"
           placeholder="Enter Order Id"

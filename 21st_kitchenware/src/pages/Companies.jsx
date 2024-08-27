@@ -119,8 +119,8 @@ export default function Companies() {
 
   const classNames = React.useMemo(
     () => ({
-      base: ["max-h-[382px]", "max-w-3xl"],
-      wrapper: ["max-h-[382px]", "max-w-3xl"],
+      base: [ "max-w-3xl"],
+      wrapper: ["max-w-3xl"],
     }),
     []
   );
@@ -190,7 +190,7 @@ export default function Companies() {
         </Table>
       </div>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (
             <>
@@ -217,7 +217,7 @@ export default function Companies() {
                     onClose();
                   }}
                 >
-                  Sign in
+                  Update
                 </Button>
               </ModalFooter>
             </>

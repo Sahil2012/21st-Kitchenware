@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen w-screen">
           <TopBar />
           <div className="flex-1 overflow-auto">
             <Routes>
@@ -44,7 +44,7 @@ function App() {
                 }
               />
               <Route
-                path="/customers"
+                path="/dealers"
                 element={
                   <ProtectedRoute>
                     <Customers />

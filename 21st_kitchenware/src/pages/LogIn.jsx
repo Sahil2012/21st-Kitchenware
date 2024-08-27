@@ -46,7 +46,7 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-full max-h-[100vh]">
-      <Card className="w-80 px-4 py-4">
+      <Card className="px-4 py-4">
         <CardHeader className="flex items-center justify-center">
           <div>LogIn to Admin Dashboard</div>
         </CardHeader>

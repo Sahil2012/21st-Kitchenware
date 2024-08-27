@@ -27,6 +27,7 @@ import {
   getFirestore,
   onSnapshot,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -101,59 +102,74 @@ export default function Products() {
   };
 
   const addProduct = async () => {
-    if (newProduct.name.trim() === "" || newProduct.unit.trim() === "" || selectedCompany === "") {
+    if (
+      newProduct.name.trim() === "" ||
+      newProduct.unit.trim() === "" ||
+      selectedCompany.trim() === ""
+    ) {
       alert("Please enter a valid company name, product name, and unit.");
       return;
     }
-
+  
     try {
-      // Reference to the product_table collection
-      const productCollection = collection(db, "product_table");
-
-      // Query to find the document with the matching company_name
-      const q = query(productCollection, where("company_name", "==", selectedCompany));
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        // No document found for the company, so create a new one
-        const op = await addDoc(productCollection, {
+      // Reference to the document with the ID of selectedCompany
+      const companyDocRef = doc(db, "product_table", selectedCompany);
+  
+      // Get the document with the ID of selectedCompany
+      const companyDocSnapshot = await getDoc(companyDocRef);
+  
+      if (!companyDocSnapshot.exists()) {
+        // No document found for the company, so create a new one with selectedCompany as the ID
+        await setDoc(companyDocRef, {
           company_name: selectedCompany,
           products: [newProduct],
         });
-        // { ...product, id: doc.id, index, company_name, ind }
-        setProducts([...products, { ...newProduct, id: op.id, index:products.length, ind:0, company_name : selectedCompany }]);
+        setProducts([
+          ...products,
+          {
+            ...newProduct,
+            id: selectedCompany, // Document ID is the company name
+            index: products.length,
+            ind: 0,
+            company_name: selectedCompany,
+          },
+        ]);
       } else {
         // Document found, check for duplicate products
-        const productDoc = querySnapshot.docs[0];
-        const productData = productDoc.data();
+        const productData = companyDocSnapshot.data();
         const existingProducts = productData.products || [];
-
+  
         const productExists = existingProducts.some(
           (p) => p.name === newProduct.name && p.unit === newProduct.unit
         );
-
+  
         if (productExists) {
           alert("Product with this name and unit already exists for this company.");
           return;
         }
-
+  
         // Add the new product to the existing products array
         const updatedProducts = [...existingProducts, newProduct];
-
+  
         // Update the document with the new products array
-        await updateDoc(productDoc.ref, { products: updatedProducts });
-        // { ...product, id: doc.id, index, company_name, ind }
-        setProducts([...products,{...newProduct,index : products.length,ind:existingProducts.length,company_name:selectedCompany}]);
+        await updateDoc(companyDocRef, { products: updatedProducts });
+        setProducts([
+          ...products,
+          {
+            ...newProduct,
+            id: selectedCompany, // Document ID is the company name
+            index: products.length,
+            ind: existingProducts.length,
+            company_name: selectedCompany,
+          },
+        ]);
       }
-      
+  
       alert("Product added successfully.");
     } catch (error) {
       console.error(error);
       alert("Something went wrong, try adding later.");
     }
-
-    console.log(products);
-    
   };
 
   useEffect(() => {
@@ -188,8 +204,8 @@ export default function Products() {
 
   const classNames = React.useMemo(
     () => ({
-      base: ["max-h-[382px]", "max-w-3xl"],
-      wrapper: ["max-h-[382px]", "max-w-3xl"],
+      base: [ "max-w-3xl"],
+      wrapper: ["max-w-3xl"],
     }),
     []
   );
@@ -197,10 +213,9 @@ export default function Products() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="py-4 flex gap-4 items-center w-full max-w-3xl px-2 justify-center">
+        <div className="py-4 flex flex-col sm:flex-row gap-4 items-center w-full max-w-3xl px-2 justify-center">
           <Select
             label="Select Company"
-            placeholder="Choose a company"
             onChange={(e) => setSelectedCompany(e.target.value)}
             size="sm"
           >
@@ -278,7 +293,7 @@ export default function Products() {
         </Table>
       </div>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal backdrop="blur" isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
           {(onClose) => (
             <>
@@ -311,7 +326,8 @@ export default function Products() {
                   Cancel
                 </Button>
                 <Button
-                  color="primary"
+                  color="success"
+                  variant="flat"
                   onPress={async () => {
                     handleUpdateClick(currProduct.id, currProduct.ind);
                     onClose();
