@@ -163,27 +163,13 @@ export default function Companies() {
           <TableHeader>
             {/* <TableColumn>S.no.</TableColumn> */}
             <TableColumn>Company Name</TableColumn>
-            <TableColumn>Actions</TableColumn>
           </TableHeader>
           <TableBody items={items}>
             {(item) => (
               <TableRow key={item.id}>
                 {/* <TableCell>1</TableCell> */}
                 <TableCell>{item.name}</TableCell>
-                <TableCell>
-                  <Chip
-                    className="capitalize cursor-pointer"
-                    color="success"
-                    size="sm"
-                    variant="flat"
-                    onClick={() => {
-                      setCurrComp(item);
-                      onOpen();
-                    }}
-                  >
-                    Edit
-                  </Chip>
-                </TableCell>
+                
               </TableRow>
             )}
           </TableBody>

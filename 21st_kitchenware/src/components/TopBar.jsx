@@ -13,13 +13,19 @@ import {
   NavbarMenuToggle,
   NavbarMenu,
   NavbarMenuItem,
+  Switch,
 } from "@nextui-org/react";
 import { AcmeLogo } from "./Acme.jsx";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { useAuth } from "../context/AuthContext.jsx";
+import { SunIcon } from "../assets/SunIcon.jsx";
+import { MoonIcon } from "../assets/MoonIcon.jsx";
 
-export default function TopBar() {
+export default function TopBar({
+  isDarkMode,
+  setIsDarkMode
+}) {
   const [active, setActive] = useState(2);
   const navigate = useNavigate();
   const auth = getAuth();
@@ -44,11 +50,13 @@ export default function TopBar() {
   return (
     <>
       <Navbar isBordered maxWidth="full" isMenuOpen={isMenuOpen}>
-        {currUser.user ? <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="flex sm:hidden"
-        /> : null}
+        {currUser.user ? (
+          <NavbarMenuToggle
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="flex sm:hidden"
+          />
+        ) : null}
 
         <NavbarContent>
           <NavbarBrand>
@@ -110,7 +118,6 @@ export default function TopBar() {
                 className="cursor-pointer"
               >
                 <div
-                  
                   onClick={() => {
                     setActive(4);
                     handleNavigation("/companies");
@@ -125,6 +132,22 @@ export default function TopBar() {
 
         {currUser.user ? (
           <NavbarContent as="div" justify="end">
+            <Switch
+              defaultSelected
+              size="lg"
+              color="secondary"
+              thumbIcon={({ isSelected, className }) =>
+                isSelected ? (
+                  <SunIcon className={className} />
+                ) : (
+                  
+                  <MoonIcon className={className} />
+                )
+              }
+              onValueChange={() => setIsDarkMode(!isDarkMode)}
+            >
+              Dark mode
+            </Switch>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
                 <Avatar
@@ -152,60 +175,62 @@ export default function TopBar() {
           </NavbarContent>
         ) : null}
 
-        {currUser.user ? <NavbarMenu isOpen={isMenuOpen}>
-          <NavbarMenuItem>
-            <Link
-              color={active === 2 ? "secondary" : "foreground"}
-              className="cursor-pointer"
-              onClick={() => {
-                setActive(2);
-                handleNavigation("/dashboard");
-                setIsMenuOpen(false);
-              }}
-            >
-              Dashboard
-            </Link>
-          </NavbarMenuItem>
-          <NavbarMenuItem>
-            <Link
-              color={active === 1 ? "secondary" : "foreground"}
-              className="cursor-pointer"
-              onClick={() => {
-                setActive(1);
-                handleNavigation("/products");
-                setIsMenuOpen(false);
-              }}
-            >
-              Products
-            </Link>
-          </NavbarMenuItem>
-          <NavbarMenuItem>
-            <Link
-              color={active === 3 ? "secondary" : "foreground"}
-              className="cursor-pointer"
-              onClick={() => {
-                setActive(3);
-                handleNavigation("/dealers");
-                setIsMenuOpen(false);
-              }}
-            >
-              Dealers
-            </Link>
-          </NavbarMenuItem>
-          <NavbarMenuItem>
-            <Link
-              color={active === 4 ? "secondary" : "foreground"}
-              className="cursor-pointer"
-              onClick={() => {
-                setActive(4);
-                handleNavigation("/companies");
-                setIsMenuOpen(false);
-              }}
-            >
-              Company
-            </Link>
-          </NavbarMenuItem>
-        </NavbarMenu> : null}
+        {currUser.user ? (
+          <NavbarMenu isOpen={isMenuOpen}>
+            <NavbarMenuItem>
+              <Link
+                color={active === 2 ? "secondary" : "foreground"}
+                className="cursor-pointer"
+                onClick={() => {
+                  setActive(2);
+                  handleNavigation("/dashboard");
+                  setIsMenuOpen(false);
+                }}
+              >
+                Dashboard
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link
+                color={active === 1 ? "secondary" : "foreground"}
+                className="cursor-pointer"
+                onClick={() => {
+                  setActive(1);
+                  handleNavigation("/products");
+                  setIsMenuOpen(false);
+                }}
+              >
+                Products
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link
+                color={active === 3 ? "secondary" : "foreground"}
+                className="cursor-pointer"
+                onClick={() => {
+                  setActive(3);
+                  handleNavigation("/dealers");
+                  setIsMenuOpen(false);
+                }}
+              >
+                Dealers
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link
+                color={active === 4 ? "secondary" : "foreground"}
+                className="cursor-pointer"
+                onClick={() => {
+                  setActive(4);
+                  handleNavigation("/companies");
+                  setIsMenuOpen(false);
+                }}
+              >
+                Company
+              </Link>
+            </NavbarMenuItem>
+          </NavbarMenu>
+        ) : null}
       </Navbar>
     </>
   );

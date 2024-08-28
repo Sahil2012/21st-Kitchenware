@@ -9,12 +9,12 @@ import Products from "./pages/Products";
 import Companies from "./pages/Companies";
 import Customers from "./pages/Customers";
 
-function App() {
+function App({ isDarkMode, setIsDarkMode }) {
   return (
     <Router>
       <AuthProvider>
         <div className="flex flex-col h-screen w-screen">
-          <TopBar />
+          <TopBar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
           <div className="flex-1 overflow-auto">
             <Routes>
               <Route path="/" element={<LogIn />} />

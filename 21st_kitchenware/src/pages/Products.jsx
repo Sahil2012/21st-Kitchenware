@@ -52,8 +52,8 @@ export default function Products() {
   }, [page, products]);
 
   const handleUpdateClick = async (productId, index) => {
-    if (currProduct.name.trim() === "" || currProduct.unit.trim() === "") {
-      alert("Product name and unit cannot be empty.");
+    if (currProduct.name.trim() === "") {
+      alert("Product name cannot be empty.");
       return;
     }
 
@@ -104,7 +104,6 @@ export default function Products() {
   const addProduct = async () => {
     if (
       newProduct.name.trim() === "" ||
-      newProduct.unit.trim() === "" ||
       selectedCompany.trim() === ""
     ) {
       alert("Please enter a valid company name, product name, and unit.");

@@ -21,6 +21,10 @@ import {
   Input,
   Divider,
   Pagination,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
 import { EditIcon } from "./EditIcon";
 import { DeleteIcon } from "./DeleteIcon";
@@ -47,7 +51,7 @@ export default function OrderTable({ orders }) {
     onOpen: onOpenEdit,
     onOpenChange: onOpenChangeEdit,
   } = useDisclosure();
-  const [page,setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const rowsPerPage = 5;
 
   const pages = Math.ceil(orders.length / rowsPerPage);
@@ -61,6 +65,7 @@ export default function OrderTable({ orders }) {
   const [editableProducts, setEditableProducts] = useState([]);
   const [originalValues, setOriginalVales] = useState([]);
   const [dis, setDis] = useState(0);
+  const [newStatus, setNewStatus] = useState("");
 
   const handleAddNewProduct = () => {
     setEditableProducts([
@@ -103,8 +108,19 @@ export default function OrderTable({ orders }) {
     // Update the entire order document, including products array and status
     await updateDoc(orderRef, {
       products: updatedProducts,
+      status: newStatus,
     });
   };
+
+  const handleDeleteProduct = (index) => {
+    const updateProduct = [];
+    editableProducts.forEach((product,i) => {
+      if(i != index)
+        updateProduct.push(product);
+    });
+
+    setEditableProducts(updateProduct);
+  }
 
   const renderCell = React.useCallback((cellValue, columnKey) => {
     switch (columnKey) {
@@ -164,6 +180,7 @@ export default function OrderTable({ orders }) {
                   setEditableProducts([...cellValue.products]);
                   setOriginalVales([...cellValue.products]);
                   setDis(editableProducts.length);
+                  setNewStatus(cellValue.status);
                   onOpenEdit();
                 }}
               >
@@ -179,10 +196,20 @@ export default function OrderTable({ orders }) {
 
   return (
     <>
-      <Table aria-label="Example table with custom cells" 
-      bottomContent={ pages > 1 ? <div className="flex justify-center">
-        <Pagination total={pages} page={page} onChange = {(page) => setPage(page)} initialPage={1}/>
-      </div> : null}
+      <Table
+        aria-label="Example table with custom cells"
+        bottomContent={
+          pages > 1 ? (
+            <div className="flex justify-center">
+              <Pagination
+                total={pages}
+                page={page}
+                onChange={(page) => setPage(page)}
+                initialPage={1}
+              />
+            </div>
+          ) : null
+        }
       >
         <TableHeader columns={columns}>
           {(column) => (
@@ -199,7 +226,7 @@ export default function OrderTable({ orders }) {
             <TableRow key={item.id}>
               <TableCell>
                 {renderCell(
-                  [item.order_id, item.company_name, item.status],
+                  [item.company_name, item.order_id, item.status],
                   "name"
                 )}
               </TableCell>
@@ -260,8 +287,10 @@ export default function OrderTable({ orders }) {
                     Company Name : <b>{currOrder.company_name}</b>
                   </div>
                   <div className="flex justify-between">
-                    <div>Dealer Name : {currOrder.dealer_name}</div>
-                    <div>City : {currOrder.dealer_city}</div>
+                    <div>
+                      Dealer Name : {currOrder.dealer_name},{" "}
+                      {currOrder.dealer_city}
+                    </div>
                   </div>
                   <Table>
                     <TableHeader>
@@ -315,11 +344,11 @@ export default function OrderTable({ orders }) {
                   Edit Order Details
                   <Chip
                     className="capitalize"
-                    color={statusColorMap[currOrder.status]}
+                    color={statusColorMap[newStatus]}
                     size="sm"
                     variant="flat"
                   >
-                    {currOrder.status}
+                    {newStatus}
                   </Chip>
                 </div>
               </ModalHeader>
@@ -339,8 +368,10 @@ export default function OrderTable({ orders }) {
                     Company Name : <b>{currOrder.company_name}</b>
                   </div>
                   <div className="flex justify-between">
-                    <div>Dealer Name : {currOrder.dealer_name}</div>
-                    <div>City : {currOrder.dealer_city}</div>
+                    <div>
+                      Dealer Name : {currOrder.dealer_name},{" "}
+                      {currOrder.dealer_city}
+                    </div>
                   </div>
 
                   <Table>
@@ -348,6 +379,7 @@ export default function OrderTable({ orders }) {
                       <TableColumn>Name</TableColumn>
                       <TableColumn>Quantity</TableColumn>
                       <TableColumn>Unit</TableColumn>
+                      <TableColumn></TableColumn>
                     </TableHeader>
                     <TableBody>
                       {editableProducts.map((product, index) => {
@@ -396,13 +428,46 @@ export default function OrderTable({ orders }) {
                                 }
                               />
                             </TableCell>
+                            <TableCell>
+                              <Tooltip content="Delete Product" color="danger">
+                                <span
+                                  className="text-lg text-danger cursor-pointer active:opacity-50"
+                                  onClick={(e) => handleDeleteProduct(index)}
+                                >
+                                  <DeleteIcon />
+                                </span>
+                              </Tooltip>
+                            </TableCell>
                           </TableRow>
                         );
                       })}
                     </TableBody>
                   </Table>
                 </div>
-                <div className="flex justify-end">
+                <div className="flex justify-between">
+                  <Dropdown backdrop="blur">
+                    <DropdownTrigger>
+                      <Button
+                        className="capitalize"
+                        color={statusColorMap[newStatus]}
+                        size="sm"
+                        variant="flat"
+                      >
+                        {newStatus}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      variant="faded"
+                      aria-label="Static Actions"
+                      onAction={(key) => setNewStatus(key)}
+                    >
+                      <DropdownItem key="Pending">Pending</DropdownItem>
+                      <DropdownItem key="Hold">Hold</DropdownItem>
+                      <DropdownItem key="Approved">Approved</DropdownItem>
+                      <DropdownItem key="Billed">Billed</DropdownItem>
+                      <DropdownItem key="Cancelled">Cancelled</DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
                   <Button
                     color="primary"
                     endContent={<PlusIcon />}

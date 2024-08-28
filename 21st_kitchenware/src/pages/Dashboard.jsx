@@ -30,7 +30,7 @@ export default function Dashboard() {
         if (orderSearch !== "") {
           q = query(
             collection(db, "order_table"),
-            where("order_id", "==", orderSearch)
+            where("company_name", "==", orderSearch)
           );
         } else {
           q = query(
@@ -50,9 +50,9 @@ export default function Dashboard() {
             ordersData.push({id: doc.id,
                 ...doc.data(),});
             if(doc.data().status == 'Billed') {
-                a ++;
-            } else if(doc.data().status == 'Approved') {
                 b ++;
+            } else if(doc.data().status == 'Approved') {
+                a ++;
             } else if(doc.data().status == 'Cancelled') {
                 c ++;
             }
@@ -72,7 +72,7 @@ export default function Dashboard() {
       <div className="flex justify-between px-4 py-4 gap-2">
         <Input
           label="Search"
-          placeholder="Enter Order Id"
+          placeholder="Enter Company Name"
           className="max-w-xs"
           onChange={(e) => setOrderSearch(e.target.value)}
         />
