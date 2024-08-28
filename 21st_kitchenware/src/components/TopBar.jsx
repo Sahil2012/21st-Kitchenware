@@ -146,7 +146,7 @@ export default function TopBar({
               }
               onValueChange={() => setIsDarkMode(!isDarkMode)}
             >
-              Dark mode
+              <span className="hidden sm:flex">Dark mode</span>
             </Switch>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
