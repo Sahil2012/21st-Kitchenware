@@ -22,7 +22,9 @@ export const plugins = [nextui(
     themes: {
       light: {
         layout: {}, // light theme layout tokens
-        colors: {}, // light theme colors
+        colors: {
+          background:"#d7d7d7"
+        }, // light theme colors
       },
       dark: {
         layout: {}, // dark theme layout tokens

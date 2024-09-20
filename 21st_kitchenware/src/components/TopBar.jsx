@@ -42,14 +42,13 @@ export default function TopBar({
   };
 
   const handleNavigation = (path) => {
-    console.log(currUser);
 
     navigate(path);
   };
 
   return (
     <>
-      <Navbar isBordered maxWidth="full" isMenuOpen={isMenuOpen}>
+      <Navbar className="light light:bg-[#308f50] light:shadow-3xl light:text-white dark dark:bg-background" isBordered maxWidth="full" isMenuOpen={isMenuOpen}>
         {currUser.user ? (
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}

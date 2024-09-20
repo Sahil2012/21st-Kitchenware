@@ -15,7 +15,7 @@ function App({ isDarkMode, setIsDarkMode }) {
       <AuthProvider>
         <div className="flex flex-col h-screen w-screen">
           <TopBar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto ">
             <Routes>
               <Route path="/" element={<LogIn />} />
               {/* Protected routes */}
